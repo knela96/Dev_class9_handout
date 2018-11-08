@@ -11,8 +11,8 @@ uint64 j1PerfTimer::frequency = 0;
 // ---------------------------------------------
 j1PerfTimer::j1PerfTimer()
 {
-	// TODO 2: Fill Constructor, Start(),ReadMs() and ReadTicks() methods
-	// they are simple, one line each!
+	if(frequency == 0)
+		frequency = SDL_GetPerformanceFrequency();
 
 	Start();
 }
@@ -20,20 +20,19 @@ j1PerfTimer::j1PerfTimer()
 // ---------------------------------------------
 void j1PerfTimer::Start()
 {
-	started_at = ReadMs();
+	started_at = SDL_GetPerformanceCounter();
 }
 
 // ---------------------------------------------
 double j1PerfTimer::ReadMs() const
 {
-	frequency = SDL_GetPerformanceFrequency();
-	return SDL_GetPerformanceCounter();
+	return 1000.0 * (double(SDL_GetPerformanceCounter() - started_at) / double(frequency));
 }
 
 // ---------------------------------------------
 uint64 j1PerfTimer::ReadTicks() const
 {
-	return (SDL_GetPerformanceCounter() - started_at)*1000 / frequency; //delete *1000 ????
+	return SDL_GetPerformanceCounter() - started_at;
 }
 
 
